@@ -234,8 +234,8 @@
         <div class="tab-pane fade active show" id="quota" role="tabpanel">
           <div class="card p-3 p-md-4 mt-3">
             <div class="mb-3">
-              <label class="form-label">MSISDN (tanpa +)</label>
-              <input id="msisdn" class="form-control form-control-lg" placeholder="628xxxxxxxx" inputmode="numeric">
+              <div class="mini muted mb-2">masukkan nomor XL</div>
+              <input id="msisdn" class="form-control form-control-lg" placeholder="contoh: 087812345678" inputmode="numeric">
             </div>
             <div class="d-grid">
               <button id="btnCheck" class="btn btn-brand btn-lg">Cek Kuota</button>
@@ -266,8 +266,8 @@
         <div class="tab-pane fade" id="member" role="tabpanel">
           <div class="card p-3 p-md-4 mt-3">
             <div class="mb-3">
-              <label class="form-label">MSISDN (tanpa +)</label>
-              <input id="msisdnMember" class="form-control form-control-lg" placeholder="628xxxxxxxx" inputmode="numeric">
+              <div class="mini muted mb-2">masukkan nomor XL</div>
+              <input id="msisdnMember" class="form-control form-control-lg" placeholder="contoh: 087812345678" inputmode="numeric">
             </div>
             <div class="d-grid">
               <button id="btnMember" class="btn btn-brand btn-lg">Cek Status Membership</button>
@@ -282,7 +282,7 @@
       </div>
     </div>
 
-    <p class="text-center mt-4 mini muted opacity-75">&copy; Circle Checker - Redesigned</p>
+    <p class="text-center mt-4 mini muted opacity-75">&copy; Srpcom Circle Checker</p>
   </main>
 
   <!-- Bootstrap JS Bundle -->
@@ -303,11 +303,31 @@
         const resultDiv = document.getElementById('result');
         const resultMemberDiv = document.getElementById('resultMember');
 
+        function normalizeMsisdn(rawInput) {
+            // Remove all non-digit characters like spaces, dashes, or plus signs
+            let cleaned = rawInput.replace(/\D/g, '');
+
+            // If it starts with '0', replace it with '62'
+            if (cleaned.startsWith('0')) {
+                return '62' + cleaned.substring(1);
+            }
+            
+            // If it starts with '8' (like 878...), prepend '62'
+            if (cleaned.length > 9 && cleaned.startsWith('8')) {
+                 return '62' + cleaned;
+            }
+
+            // If it already starts with '62', it's considered valid
+            return cleaned;
+        }
+
         // Kuota Checker
         btnCheck.addEventListener('click', () => {
-            const msisdn = msisdnInput.value;
-            if (!msisdn || !/^\d{10,15}$/.test(msisdn)) {
-                stateDiv.textContent = 'Silakan masukkan nomor MSISDN yang valid.';
+            const rawMsisdn = msisdnInput.value;
+            const msisdn = normalizeMsisdn(rawMsisdn);
+            
+            if (!msisdn || msisdn.length < 11 || msisdn.length > 15 || !msisdn.startsWith('62')) {
+                stateDiv.textContent = 'Format nomor tidak valid. Gunakan format 08xx, +628xx, atau 628xx.';
                 resultDiv.style.display = 'none';
                 return;
             }
@@ -351,9 +371,11 @@
 
         // Membership Checker
         btnMember.addEventListener('click', () => {
-            const msisdn = msisdnMemberInput.value;
-            if (!msisdn || !/^\d{10,15}$/.test(msisdn)) {
-                stateMemberDiv.textContent = 'Silakan masukkan nomor MSISDN yang valid.';
+            const rawMsisdn = msisdnMemberInput.value;
+            const msisdn = normalizeMsisdn(rawMsisdn);
+
+            if (!msisdn || msisdn.length < 11 || msisdn.length > 15 || !msisdn.startsWith('62')) {
+                stateMemberDiv.textContent = 'Format nomor tidak valid. Gunakan format 08xx, +628xx, atau 628xx.';
                 resultMemberDiv.style.display = 'none';
                 return;
             }
@@ -387,5 +409,7 @@
   </script>
 </body>
 </html>
+
+
 
 
