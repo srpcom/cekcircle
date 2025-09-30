@@ -182,9 +182,21 @@
         font-size: 0.9rem;
     }
     
+    @keyframes blink-green {
+      0%, 100% {
+        opacity: 0.7;
+        text-shadow: 0 0 4px #6ee7b7;
+      }
+      50% {
+        opacity: 1;
+        text-shadow: 0 0 12px #6ee7b7, 0 0 20px #6ee7b7;
+      }
+    }
+
     #m_status.is-member {
         color: #6ee7b7; /* A lighter green for text */
         font-weight: 600;
+        animation: blink-green 1.8s infinite ease-in-out;
     }
 
     #m_status.not-member {
@@ -375,4 +387,5 @@
   </script>
 </body>
 </html>
+
 
